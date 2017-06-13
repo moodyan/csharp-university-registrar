@@ -1,0 +1,28 @@
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+<h2>Student: @Model["student"].GetFirstName() @Model["student"].GetLastName()</h2>
+<hr />
+@if (@Model["studentCourses"].Count != 0)
+{
+  <h4>This student is enrolled in these courses:</h4>
+  <ul>
+    @foreach (var courses in @Model["studentCourses"])
+    {
+      <li>@courses.GetName()</li>
+    }
+  </ul>
+}
+<h4>Add a course for this student:</h4>
+<form action='/student/add_course' method='post'>
+  <input id='student-id' name='student-id' type='hidden' value='@Model["student"].GetId()'>
+  <label for='course-id'>Select a course</label>
+  <select id='course-id' name='course-id' type='text'>
+    @foreach (var course in @Model["allCourses"])
+    {
+      <option value='@course.GetId()'>@course.GetCourseName(), @course.GetCourseNumber()</option>
+    }
+  </select>
+  <button type='submit'>Add</button>
+</form>
+<p><a href="/">Return to Main Page</a></p>

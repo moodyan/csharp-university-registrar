@@ -1,0 +1,12 @@
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+<form action="/courses/new" method="post">
+  <label for="course-name">Course Name</label>
+  <input id="course-name" name="course-name" type="text">
+  <label for="course-number">Course Number</label>
+  <input id="course-number" name="course-number" type="text">
+  <button type="submit">Add</button>
+</form>
+<h4><a href="/">Return home</a></h4>
+<h4><a href="/courses">View All Courses</a></h4>

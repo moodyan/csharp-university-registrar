@@ -1,0 +1,30 @@
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+
+<h2>Course: @Model["course"].GetCourseName()</h2>
+<h3>Course Number: @Model["course"].GetCourseNumber()</h3>
+<hr />
+@if (@Model["courseStudents"].Count != 0)
+{
+  <h4>Here are all the students in this course:</h4>
+  <ul>
+    @foreach (var student in @Model["courseStudents"])
+    {
+      <li>@student.GetFirstName() @student.GetLastName()</li>
+    }
+  </ul>
+}
+<h4>Add a student to this course:</h4>
+<form action='/course/add_student' method='post'>
+  <input id='course-id' name='course-id' type='hidden' value='@Model["course"].GetId()'>
+  <label for='student-id'>Select a student</label>
+  <select id='student-id' name='student-id' type='text'>
+    @foreach (var student in @Model["allStudents"])
+    {
+      <option value='@student.GetId()'>@student.GetFirstName() @student.GetLastName()</option>
+    }
+  </select>
+  <button type='submit'>Add</button>
+</form>
+<p><a href="/">Return to Main Page</a></p>
