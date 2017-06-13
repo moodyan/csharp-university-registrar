@@ -95,6 +95,43 @@ namespace Registrar.Objects
 
       return allStudents;
     }
+    public void Save()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO students (first_name, last_name, enrollment_date) OUTPUT INSERTED.id VALUES (@StudentFirstName, @StudentLastName, @StudentEnrollmentDate);", conn);
+
+      SqlParameter firstNameParameter = new SqlParameter();
+      firstNameParameter.ParameterName = "@StudentFirstName";
+      firstNameParameter.Value = this.GetFirstName();
+      cmd.Parameters.Add(firstNameParameter);
+
+      SqlParameter lastNameParameter = new SqlParameter();
+      lastNameParameter.ParameterName = "@StudentLastName";
+      lastNameParameter.Value = this.GetLastName();
+      cmd.Parameters.Add(lastNameParameter);
+
+      SqlParameter enrollmentDateParameter = new SqlParameter();
+      enrollmentDateParameter.ParameterName = "@StudentEnrollmentDate";
+      enrollmentDateParameter.Value = this.GetEnrollmentDate();
+      cmd.Parameters.Add(enrollmentDateParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if(conn != null)
+      {
+        conn.Close();
+      }
+    }
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
