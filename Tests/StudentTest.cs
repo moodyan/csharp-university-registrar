@@ -102,10 +102,80 @@ namespace Registrar
       //Assert
       Assert.Equal(testStudentList, resultStudents);
     }
+    [Fact]
+    public void Test_AddCourse_AddsCourseToStudent()
+    {
+      //Arrange
+      Student testStudent = new Student("John", "Doe", new DateTime (2017, 04, 17));
+      testStudent.Save();
+
+      Course testCourse = new Course("English 101", "ENG101");
+      testCourse.Save();
+
+      Course testCourse2 = new Course("Biology 101", "BIO101");
+      testCourse2.Save();
+
+      //Act
+      testStudent.AddCourse(testCourse);
+      testStudent.AddCourse(testCourse2);
+
+      List<Course> result = testStudent.GetCourses();
+      List<Course> testList = new List<Course>{testCourse, testCourse2};
+
+      //Assert
+      Assert.Equal(testList, result);
+    }
+
+    [Fact]
+    public void GetCourses_ReturnsAllStudentCourses_CourseList()
+    {
+      //Arrange
+      Student testStudent = new Student("John", "Doe", new DateTime (2017, 04, 17));
+      testStudent.Save();
+
+      Course testCourse1 = new Course("English 101", "ENG101");
+      testCourse1.Save();
+
+      Course testCourse2 = new Course("Biology 101", "BIO101");
+      testCourse2.Save();
+
+      //Act
+      testStudent.AddCourse(testCourse1);
+      List<Course> savedCourses = testStudent.GetCourses();
+      List<Course> testList = new List<Course> {testCourse1};
+
+      //Assert
+      Assert.Equal(testList, savedCourses);
+    }
+
+    [Fact]
+    public void Delete_DeletesStudentAssociationsFromDatabase_StudentList()
+    {
+      //Arrange
+      Course testCourse = new Course("English 101", "ENG101");
+      testCourse.Save();
+
+      string testFirstName = "Daisy";
+      string testLastName = "Duke";
+      DateTime testEnrollmentDate = new DateTime(2016, 01, 01);
+      Student testStudent = new Student(testFirstName, testLastName, testEnrollmentDate);
+      testStudent.Save();
+
+      //Act
+      testStudent.AddCourse(testCourse);
+      testStudent.Delete();
+
+      List<Student> resultCourseStudents = testCourse.GetStudents();
+      List<Student> testCourseStudents = new List<Student> {};
+
+      //Assert
+      Assert.Equal(testCourseStudents, resultCourseStudents);
+    }
 
     public void Dispose()
     {
       Student.DeleteAll();
+      Course.DeleteAll();
     }
   }
 }

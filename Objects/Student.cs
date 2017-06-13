@@ -186,7 +186,87 @@ namespace Registrar.Objects
         conn.Close();
       }
     }
+    public void AddCourse(Course newCourse)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
 
+      SqlCommand cmd = new SqlCommand("INSERT INTO students_courses (students_id, courses_id) VALUES (@StudentId, @CourseId);", conn);
+      SqlParameter StudentIdParameter = new SqlParameter();
+      StudentIdParameter.ParameterName = "@StudentId";
+      StudentIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(StudentIdParameter);
+
+      SqlParameter courseIdParameter = new SqlParameter();
+      courseIdParameter.ParameterName = "@CourseId";
+      courseIdParameter.Value = newCourse.GetId();
+      cmd.Parameters.Add(courseIdParameter);
+
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public List<Course> GetCourses()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT courses_id FROM students_courses WHERE students_id = @StudentId;", conn);
+
+      SqlParameter cityIdParameter = new SqlParameter();
+      cityIdParameter.ParameterName = "@StudentId";
+      cityIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(cityIdParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<int> courseIds = new List<int> {};
+
+      while (rdr.Read())
+      {
+        int courseId = rdr.GetInt32(0);
+        courseIds.Add(courseId);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+
+      List<Course> courses = new List<Course> {};
+
+      foreach (int courseId in courseIds)
+      {
+        SqlCommand courseQuery = new SqlCommand("SELECT * FROM courses WHERE id = @CourseId;", conn);
+
+        SqlParameter courseIdParameter = new SqlParameter();
+        courseIdParameter.ParameterName = "@CourseId";
+        courseIdParameter.Value = courseId;
+        courseQuery.Parameters.Add(courseIdParameter);
+
+        SqlDataReader queryReader = courseQuery.ExecuteReader();
+        while (queryReader.Read())
+        {
+          int thisCourseId = queryReader.GetInt32(0);
+          string courseName = queryReader.GetString(1);
+          string courseNumber = queryReader.GetString(2);
+          Course foundCourse = new Course(courseName, courseNumber, thisCourseId);
+          courses.Add(foundCourse);
+        }
+        if (queryReader != null)
+        {
+          queryReader.Close();
+        }
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return courses;
+    }
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
