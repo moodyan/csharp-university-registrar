@@ -11,12 +11,12 @@ else
   <ul>
     @foreach (var student in Model)
     {
-      <li><a href='/students/@student.GetId()'>@student.GetLastName(), @student.GetFirstName()</a></li>
+      <li><a href='/student/@student.GetId()'>@student.GetLastName(), @student.GetFirstName()</a></li>
     }
   </ul>
   <form action="/students/delete" method="post">
-    <button type="submit">Clear all students</button>
+    <button type="submit" class="btn btn-danger">Delete all students</button>
   </form>
 }
-<p><a href="/students/new">Add a new student</a></p>
+<p><a href="/student/new">Add a new student</a></p>
 <p><a href="/">Return home</a></p>

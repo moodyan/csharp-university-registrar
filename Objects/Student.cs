@@ -71,7 +71,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT * FROM students;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM students ORDER BY last_name;", conn);
       SqlDataReader rdr = cmd.ExecuteReader();
 
       while(rdr.Read())
@@ -266,6 +266,54 @@ namespace Registrar.Objects
         conn.Close();
       }
       return courses;
+    }
+    public void UpdateFirstName(string newFirstName)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand ("UPDATE students SET first_name = @NewFirstName OUTPUT INSERTED.first_name WHERE id = @StudentId;", conn);
+
+      cmd.Parameters.AddWithValue("@NewFirstName", newFirstName);
+      cmd.Parameters.AddWithValue("@StudentId", _id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._firstName = rdr.GetString(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+    public void UpdateLastName(string newLastName)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand ("UPDATE students SET last_name = @NewLastName OUTPUT INSERTED.last_name WHERE id = @StudentId;", conn);
+
+      cmd.Parameters.AddWithValue("@NewLastName", newLastName);
+      cmd.Parameters.AddWithValue("@StudentId", _id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._lastName = rdr.GetString(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
     }
     public static void DeleteAll()
     {

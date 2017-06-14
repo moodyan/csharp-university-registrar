@@ -60,7 +60,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT * FROM courses;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM courses ORDER BY course_number;", conn);
       SqlDataReader rdr = cmd.ExecuteReader();
 
       while(rdr.Read())

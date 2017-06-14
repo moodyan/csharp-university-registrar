@@ -2,6 +2,7 @@
   Layout="Shared/_Layout.cshtml";
 }
 <h2>Student: @Model["student"].GetFirstName() @Model["student"].GetLastName()</h2>
+<h4><strong>Enrolled: @Model["student"].GetEnrollmentDate()</strong></h4>
 <hr />
 @if (@Model["studentCourses"].Count != 0)
 {
@@ -9,10 +10,11 @@
   <ul>
     @foreach (var courses in @Model["studentCourses"])
     {
-      <li>@courses.GetName()</li>
+      <li>@courses.GetCourseName()</li>
     }
   </ul>
 }
+<hr>
 <h4>Add a course for this student:</h4>
 <form action='/student/add_course' method='post'>
   <input id='student-id' name='student-id' type='hidden' value='@Model["student"].GetId()'>
@@ -24,5 +26,21 @@
     }
   </select>
   <button type='submit'>Add</button>
+</form>
+<hr>
+<form action='/student/update/@Model["student"].GetId()' method="post">
+  <input type="hidden" name="_method" value="PATCH">
+  <label for="new-first-name">Update this student's first name</label>
+  <input type="text" name="new-first-name">
+  <br>
+  <label for="new-last-name">Update this student's last name</label>
+  <input type="text" name="new-last-name">
+  <br>
+  <button type="submit" class="btn btn-info">Update</button>
+</form>
+<hr>
+<form action='/student/delete/@Model["student"].GetId()' method="post">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit" class="btn btn-danger">Delete this student</button>
 </form>
 <p><a href="/">Return to Main Page</a></p>
