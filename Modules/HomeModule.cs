@@ -157,7 +157,7 @@ namespace Registrar
         model.Add("student", currentStudent);
         model.Add("allCourses", allCourses);
         model.Add("studentCourses", studentCourses);
-        return View["student.cshtml", model];
+        return View["success.cshtml", model];
       };
     }
   }
