@@ -48,7 +48,7 @@ namespace Registrar
         newStudent.Save();
         return View["success.cshtml"];
       };
-      Get["students/delete"] = _ => {
+      Get["students/delete/confirm"] = _ => {
         return View["students_delete.cshtml"];
       };
       Post["/students/delete"] = _ => {

@@ -14,9 +14,7 @@ else
       <li><a href='/student/@student.GetId()'>@student.GetLastName(), @student.GetFirstName()</a></li>
     }
   </ul>
-  <form action="/students/delete" method="post">
-    <button type="submit" class="btn btn-danger">Delete all students</button>
-  </form>
+    <a href="/students/delete/confirm"><button type="submit" class="btn btn-danger">Delete all students</button></a>
 }
 <p><a href="/student/new">Add a new student</a></p>
 <p><a href="/">Return home</a></p>
