@@ -166,6 +166,52 @@ namespace Registrar
       Assert.Equal(testCourseDepartments, resultCourseDepartments);
     }
 
+    [Fact]
+    public void Test_AddStudent_AddsStudentToDepartment()
+    {
+      //Arrange
+      Department testDepartment = new Department("English");
+      testDepartment.Save();
+
+      Student testStudent = new Student("John", "Doe", new DateTime (2017, 04, 17));
+      testStudent.Save();
+
+      Student testStudent2 = new Student("Daisy", "Duke", new DateTime (2016, 04, 17));
+      testStudent2.Save();
+
+      //Act
+      testDepartment.AddStudent(testStudent);
+      testDepartment.AddStudent(testStudent2);
+
+      List<Student> result = testDepartment.GetStudents();
+      List<Student> testList = new List<Student>{testStudent, testStudent2};
+
+      //Assert
+      Assert.Equal(testList, result);
+    }
+
+    [Fact]
+    public void GetStudents_ReturnsAllDepartmentStudents_StudentList()
+    {
+      //Arrange
+      Department testDepartment = new Department("English");
+      testDepartment.Save();
+
+      Student testStudent1 = new Student("John", "Doe", new DateTime (2017, 04, 17));
+      testStudent1.Save();
+
+      Student testStudent2 = new Student("Daisy", "Duke", new DateTime (2016, 04, 17));
+      testStudent2.Save();
+
+      //Act
+      testDepartment.AddStudent(testStudent1);
+      List<Student> savedStudents = testDepartment.GetStudents();
+      List<Student> testList = new List<Student> {testStudent1};
+
+      //Assert
+      Assert.Equal(testList, savedStudents);
+    }
+
     public void Dispose()
     {
       Department.DeleteAll();

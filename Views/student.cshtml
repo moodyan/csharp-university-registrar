@@ -3,14 +3,26 @@
 }
 <h2>Student: @Model["student"].GetFirstName() @Model["student"].GetLastName()</h2>
 <h4><strong>Enrolled: @Model["student"].GetEnrollmentDate()</strong></h4>
-<hr />
+
 @if (@Model["studentCourses"].Count != 0)
 {
+  <hr>
   <h4>This student is enrolled in these courses:</h4>
   <ul>
     @foreach (var courses in @Model["studentCourses"])
     {
       <li>@courses.GetCourseName()</li>
+    }
+  </ul>
+}
+@if (@Model["studentDepartments"].Count != 0)
+{
+  <hr>
+  <h4>This student is enrolled in these departments:</h4>
+  <ul>
+    @foreach (var departments in @Model["studentDepartments"])
+    {
+      <li>@departments.GetDepartmentName()</li>
     }
   </ul>
 }
@@ -26,6 +38,18 @@
     }
   </select>
   <button type='submit'>Add</button>
+</form>
+<h4>Add a department for this student:</h4>
+<form action='/student/add_department' method='post'>
+  <input id='student-id' name='student-id' type='hidden' value='@Model["student"].GetId()'>
+  <label for='department-id'>Select a department</label>
+  <select id='department-id' name='department-id' type='text'>
+    @foreach (var department in @Model["allDepartments"])
+    {
+      <option value='@department.GetId()'>@department.GetDepartmentName()</option>
+    }
+  </select>
+  <button type='submit' class="btn btn-info">Add</button>
 </form>
 <hr>
 <form action='/student/update/@Model["student"].GetId()' method="post">

@@ -179,10 +179,10 @@ namespace Registrar.Objects
 
       SqlCommand cmd = new SqlCommand("SELECT courses_id FROM departments_courses WHERE departments_id = @DepartmentId;", conn);
 
-      SqlParameter cityIdParameter = new SqlParameter();
-      cityIdParameter.ParameterName = "@DepartmentId";
-      cityIdParameter.Value = this.GetId();
-      cmd.Parameters.Add(cityIdParameter);
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(departmentIdParameter);
 
       SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -253,6 +253,93 @@ namespace Registrar.Objects
     //     conn.Close();
     //   }
     // }
+    public void AddStudent(Student newStudent)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO departments_courses (departments_id, courses_id, students_id) VALUES (@DepartmentId, @CourseId, @StudentId);", conn);
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(departmentIdParameter);
+
+      SqlParameter courseIdParameter = new SqlParameter();
+      courseIdParameter.ParameterName = "@CourseId";
+      courseIdParameter.Value = newStudent.GetId();
+      cmd.Parameters.Add(courseIdParameter);
+
+      SqlParameter studentIdParameter = new SqlParameter();
+      studentIdParameter.ParameterName = "@StudentId";
+      studentIdParameter.Value = newStudent.GetId();
+      cmd.Parameters.Add(studentIdParameter);
+
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public List<Student> GetStudents()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT students_id FROM departments_courses WHERE departments_id = @DepartmentId;", conn);
+
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(departmentIdParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<int> studentIds = new List<int> {};
+
+      while (rdr.Read())
+      {
+        int studentId = rdr.GetInt32(0);
+        studentIds.Add(studentId);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+
+      List<Student> students = new List<Student> {};
+
+      foreach (int studentId in studentIds)
+      {
+        SqlCommand studentQuery = new SqlCommand("SELECT * FROM students WHERE id = @StudentId;", conn);
+
+        SqlParameter studentIdParameter = new SqlParameter();
+        studentIdParameter.ParameterName = "@StudentId";
+        studentIdParameter.Value = studentId;
+        studentQuery.Parameters.Add(studentIdParameter);
+
+        SqlDataReader queryReader = studentQuery.ExecuteReader();
+        while (queryReader.Read())
+        {
+          int thisStudentId = queryReader.GetInt32(0);
+          string studentFirstName = queryReader.GetString(1);
+          string studentLastName = queryReader.GetString(2);
+          DateTime studentEnrollmentDate = queryReader.GetDateTime(3);
+          Student foundStudent = new Student(studentFirstName, studentLastName, studentEnrollmentDate, thisStudentId);
+          students.Add(foundStudent);
+        }
+        if (queryReader != null)
+        {
+          queryReader.Close();
+        }
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return students;
+    }
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();

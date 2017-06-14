@@ -1,0 +1,42 @@
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+
+<h2>@Model["department"].GetDepartmentName()</h2>
+
+@if (@Model["departmentStudents"].Count !=0)
+{
+  <hr>
+  <h4>Here are all the students in this department:</h4>
+  <ul>
+    @foreach (var student in @Model["departmentStudents"])
+    {
+      <li>@student.GetFirstName() @student.GetLastName()</li>
+    }
+  </ul>
+}
+
+@if (@Model["allStudents"].Count !=0)
+{
+  <hr>
+  <h4>Add a student to this department:</h4>
+  <form action='/departments/add_student' method='post'>
+    <input id='department-id' name='department-id' type='hidden' value='@Model["department"].GetId()'>
+    <label for='student-id'>Select a student</label>
+    <select id='student-id' name='student-id' type='text'>
+      @foreach (var student in @Model["allStudents"])
+      {
+        <option value='@student.GetId()'>@student.GetFirstName() @student.GetLastName()</option>
+      }
+    </select>
+    <br>
+    <button type='submit' class="btn btn-info">Add</button>
+  </form>
+}
+<hr>
+<form action='/departments/delete/@Model["department"].GetId()' method="post">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit" class="btn btn-danger">Delete this department</button>
+</form>
+<hr>
+<p><a href="/">Return to Main Page</a></p>

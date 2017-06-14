@@ -267,6 +267,94 @@ namespace Registrar.Objects
       }
       return courses;
     }
+
+    public void AddDepartment(Department newDepartment)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO departments_courses (departments_id, courses_id, students_id) VALUES (@DepartmentId, @CourseId, @StudentId);", conn);
+
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = newDepartment.GetId();
+      cmd.Parameters.Add(departmentIdParameter);
+
+      SqlParameter courseIdParameter = new SqlParameter();
+      courseIdParameter.ParameterName = "@CourseId";
+      courseIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(courseIdParameter);
+
+      SqlParameter studentIdParameter = new SqlParameter();
+      studentIdParameter.ParameterName = "@StudentId";
+      studentIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(studentIdParameter);
+
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public List<Department> GetDepartments()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT departments_id FROM departments_courses WHERE students_id = @StudentId;", conn);
+
+      SqlParameter studentIdParameter = new SqlParameter();
+      studentIdParameter.ParameterName = "@StudentId";
+      studentIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(studentIdParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<int> departmentIds = new List<int> {};
+
+      while (rdr.Read())
+      {
+        int departmentId = rdr.GetInt32(0);
+        departmentIds.Add(departmentId);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+
+      List<Department> departments = new List<Department> {};
+
+      foreach (int departmentId in departmentIds)
+      {
+        SqlCommand departmentQuery = new SqlCommand("SELECT * FROM departments WHERE id = @DepartmentId;", conn);
+
+        SqlParameter departmentIdParameter = new SqlParameter();
+        departmentIdParameter.ParameterName = "@DepartmentId";
+        departmentIdParameter.Value = departmentId;
+        departmentQuery.Parameters.Add(departmentIdParameter);
+
+        SqlDataReader queryReader = departmentQuery.ExecuteReader();
+        while (queryReader.Read())
+        {
+          int thisDepartmentId = queryReader.GetInt32(0);
+          string departmentName = queryReader.GetString(1);
+          Department foundDepartment = new Department(departmentName, thisDepartmentId);
+          departments.Add(foundDepartment);
+        }
+        if (queryReader != null)
+        {
+          queryReader.Close();
+        }
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return departments;
+    }
+
     public void UpdateFirstName(string newFirstName)
     {
       SqlConnection conn = DB.Connection();
