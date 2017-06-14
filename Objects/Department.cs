@@ -135,7 +135,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("DELETE FROM departments WHERE id = @DepartmentId; DELETE FROM departments_courses WHERE departments_id = @DepartmentId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM departments WHERE id = @DepartmentId; DELETE FROM university WHERE departments_id = @DepartmentId;", conn);
       SqlParameter departmentIdParameter = new SqlParameter();
       departmentIdParameter.ParameterName = "@DepartmentId";
       departmentIdParameter.Value = this.GetId();
@@ -153,7 +153,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO departments_courses (departments_id, courses_id) VALUES (@DepartmentId, @CourseId);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO university (departments_id, courses_id) VALUES (@DepartmentId, @CourseId);", conn);
       SqlParameter DepartmentIdParameter = new SqlParameter();
       DepartmentIdParameter.ParameterName = "@DepartmentId";
       DepartmentIdParameter.Value = this.GetId();
@@ -177,7 +177,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT courses_id FROM departments_courses WHERE departments_id = @DepartmentId;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT courses_id FROM university WHERE departments_id = @DepartmentId;", conn);
 
       SqlParameter departmentIdParameter = new SqlParameter();
       departmentIdParameter.ParameterName = "@DepartmentId";
@@ -258,7 +258,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO departments_courses (departments_id, courses_id, students_id) VALUES (@DepartmentId, @CourseId, @StudentId);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO university (departments_id, courses_id, students_id) VALUES (@DepartmentId, @CourseId, @StudentId);", conn);
       SqlParameter departmentIdParameter = new SqlParameter();
       departmentIdParameter.ParameterName = "@DepartmentId";
       departmentIdParameter.Value = this.GetId();
@@ -287,7 +287,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT students_id FROM departments_courses WHERE departments_id = @DepartmentId;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT students_id FROM university WHERE departments_id = @DepartmentId;", conn);
 
       SqlParameter departmentIdParameter = new SqlParameter();
       departmentIdParameter.ParameterName = "@DepartmentId";

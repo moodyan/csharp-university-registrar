@@ -273,7 +273,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO departments_courses (departments_id, courses_id, students_id) VALUES (@DepartmentId, @CourseId, @StudentId);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO university (departments_id, courses_id, students_id) VALUES (@DepartmentId, @CourseId, @StudentId);", conn);
 
       SqlParameter departmentIdParameter = new SqlParameter();
       departmentIdParameter.ParameterName = "@DepartmentId";
@@ -303,7 +303,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT departments_id FROM departments_courses WHERE students_id = @StudentId;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT departments_id FROM university WHERE students_id = @StudentId;", conn);
 
       SqlParameter studentIdParameter = new SqlParameter();
       studentIdParameter.ParameterName = "@StudentId";
@@ -410,9 +410,15 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
+      SqlCommand cmd = new SqlCommand("SELECT * FROM students WHERE last_name = @LastName;", conn);
+
       SqlParameter studentNameParam = new SqlParameter("@LastName", searchLastName);
 
-      SqlCommand cmd = new SqlCommand("SELECT * FROM students WHERE last_name = @LastName;", conn);
+
+      // SqlCommand cmd = new SqlCommand("SELECT * FROM students WHERE last_name LIKE @LastName + %;", conn);
+      // SqlParameter studentNameParam = new SqlParameter();
+      // studentNameParam.ParameterName = "@LastName";
+      // studentNameParam.Value = searchLastName + "%";
 
       cmd.Parameters.Add(studentNameParam);
       SqlDataReader rdr = cmd.ExecuteReader();

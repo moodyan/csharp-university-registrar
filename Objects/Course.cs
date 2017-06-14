@@ -240,7 +240,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO departments_courses (departments_id, courses_id) VALUES (@DepartmentId, @CourseId);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO university (departments_id, courses_id) VALUES (@DepartmentId, @CourseId);", conn);
 
       SqlParameter departmentIdParameter = new SqlParameter();
       departmentIdParameter.ParameterName = "@DepartmentId";
@@ -265,7 +265,7 @@ namespace Registrar.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT departments_id FROM departments_courses WHERE courses_id = @CourseId;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT departments_id FROM university WHERE courses_id = @CourseId;", conn);
 
       SqlParameter courseIdParameter = new SqlParameter();
       courseIdParameter.ParameterName = "@CourseId";
