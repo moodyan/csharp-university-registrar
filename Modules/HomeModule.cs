@@ -55,6 +55,15 @@ namespace Registrar
         Student.DeleteAll();
         return View["success.cshtml"];
       };
+      Get["students/search"] = _ => {
+        List<Student> allStudents = Student.GetAll();
+        return View["students_search.cshtml", allStudents];
+      };
+      Post["students/search"] = _ => {
+        List<Student> searchStudent = Student.Search(Request.Form["student-search"]);
+        return View["students_search.cshtml", searchStudent];
+      };
+
       Get["departments/{id}"] = parameters => {
         Dictionary<string, object> model = new Dictionary<string, object>();
         Department SelectedDepartment = Department.Find(parameters.id);

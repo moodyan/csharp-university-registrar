@@ -1,0 +1,26 @@
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+
+<h2>Search for a Student</h2>
+<form action="/students/search" method="post">
+  <label for="student-search">Input the Student's Last Name: </label>
+  <input type="text" name="student-search">
+  <button type="submit" name="button" class="btn btn-info">Search!</button>
+</form>
+
+<ul>
+  @if (Model.Count != 0)
+  {
+    @foreach (var student in Model)
+    {
+      <li><a href="/student/@student.GetId()">@student.GetFirstName() @student.GetLastName()</a></li>
+    }
+  }
+  else
+  {
+    <li>There is no student of that name OR no students have been added yet! <a href="/students/add">Add one</a></li>
+  }
+</ul>
+
+<h5><a href="/">Go Home</a></h5>

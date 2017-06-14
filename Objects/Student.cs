@@ -403,6 +403,41 @@ namespace Registrar.Objects
         conn.Close();
       }
     }
+    public static List<Student> Search(string searchLastName)
+    {
+      List<Student> allStudents = new List<Student>{};
+
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlParameter studentNameParam = new SqlParameter("@LastName", searchLastName);
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM students WHERE last_name = @LastName;", conn);
+
+      cmd.Parameters.Add(studentNameParam);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        int studentId = rdr.GetInt32(0);
+        string studentFirstName = rdr.GetString(1);
+        string studentLastName = rdr.GetString(2);
+        DateTime studentEnrollmentDate = rdr.GetDateTime(3);
+
+        Student newStudent = new Student(studentFirstName, studentLastName, studentEnrollmentDate, studentId);
+        allStudents.Add(newStudent);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return allStudents;
+    }
+
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
